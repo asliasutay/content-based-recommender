@@ -2,18 +2,6 @@
 # Content Based Recommendation (İçerik Temelli Tavsiye)
 #############################
 
-#############################
-# Film Overview'larına Göre Tavsiye Geliştirme
-#############################
-
-# 1. TF-IDF Matrisinin Oluşturulması
-# 2. Cosine Similarity Matrisinin Oluşturulması
-# 3. Benzerliklere Göre Önerilerin Yapılması
-# 4. Çalışma Scriptinin Hazırlanması
-
-#################################
-# 1. TF-IDF Matrisinin Oluşturulması
-#################################
 
 import pandas as pd
 pd.set_option('display.max_columns', None)
@@ -21,7 +9,6 @@ pd.set_option('display.width', 500)
 pd.set_option('display.expand_frame_repr', False)
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-# https://www.kaggle.com/rounakbanik/the-movies-dataset
 df = pd.read_csv("datasets/the_movies_dataset/movies_metadata.csv", low_memory=False)  # DtypeWarning kapamak icin
 df.head()
 df.shape
@@ -30,7 +17,6 @@ df["overview"].head()
 
 tfidf = TfidfVectorizer(stop_words="english")
 
-# df[df['overview'].isnull()]
 df['overview'] = df['overview'].fillna('')
 
 tfidf_matrix = tfidf.fit_transform(df['overview'])
@@ -44,10 +30,6 @@ tfidf.get_feature_names()
 tfidf_matrix.toarray()
 
 
-#################################
-# 2. Cosine Similarity Matrisinin Oluşturulması
-#################################
-
 cosine_sim = cosine_similarity(tfidf_matrix,
                                tfidf_matrix)
 
@@ -55,9 +37,6 @@ cosine_sim.shape
 cosine_sim[1]
 
 
-#################################
-# 3. Benzerliklere Göre Önerilerin Yapılması
-#################################
 
 indices = pd.Series(df.index, index=df['title'])
 
@@ -80,9 +59,6 @@ movie_indices = similarity_scores.sort_values("score", ascending=False)[1:11].in
 
 df['title'].iloc[movie_indices]
 
-#################################
-# 4. Çalışma Scriptinin Hazırlanması
-#################################
 
 def content_based_recommender(title, cosine_sim, dataframe):
     # index'leri olusturma
@@ -115,6 +91,3 @@ def calculate_cosine_sim(dataframe):
 
 cosine_sim = calculate_cosine_sim(df)
 content_based_recommender('The Dark Knight Rises', cosine_sim, df)
-# 1 [90, 12, 23, 45, 67]
-# 2 [90, 12, 23, 45, 67]
-# 3
